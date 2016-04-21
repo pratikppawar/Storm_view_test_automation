@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suite name="Suite" parallel="false">
+ <test name="Test0">
+   <classes>
+      <class name="common.Navigator"/>
+    </classes>
+  </test>
+  <test name="Test">
+    <classes>
+   <class name="testcase.topologySummary.TopologySummaryTest"/>
+    </classes>
+  </test>
+  <test name="Test2">
+    <classes>
+   <class name="testcase.topogyDetail.TopologyDetailTest"/>
+    </classes>
+  </test>
+  <test name="Test3">
+    <classes>
+ 	<class name="testcase.ClusterSummary.ClusterSummaryTest"/>
+    </classes>
+  </test> <!-- Test -->
+</suite> <!-- Suite -->
