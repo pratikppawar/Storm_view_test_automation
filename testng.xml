@@ -1,7 +1,7 @@
-<suite name="Cignifi Test Suite" preserve-order="true" >
+<suite name="Storm Test Suite" preserve-order="true" >
 	<test name="Storm Dashboard Test">
     <classes>
-      <class name="com.storm.tests.DashboardTest"/>
+      <class name="com.storm.tests.StormViewTests"/>
     </classes>
   </test >
 </suite>

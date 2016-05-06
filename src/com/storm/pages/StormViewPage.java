@@ -77,7 +77,16 @@ public class StormViewPage extends BasePage{
 	@FindBy(xpath=".//*[@id='container']/div/div[2]/div[2]/div/div[1]")
 	public WebElement boltStatsHeader;
 	
-	
+	public void getTopologyWindowList()
+	{
+//		List<WebElement> elem=driver.findElements(By.xpath(".//*[@id='container']/div/div[2]/div[2]/div/div[2]/table/tbody/tr/td[1]"));
+//		for(WebElement ele:elem)
+//		{
+//			String windowList=ele.getText();
+//			windowList.compareTo()
+//		}
+//		return "";
+	}
 	
 //	public void getTopologyName(String topologyName)
 //	{

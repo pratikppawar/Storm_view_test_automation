@@ -37,7 +37,7 @@ public class StormViewTests extends BaseTest{
 			String username = propertiesUtil.getProperty(UserProperty.AMBARI_LOGIN, "admin");
 			String password = propertiesUtil.getProperty(UserProperty.AMBARI_PASSWORD, "admin");
 			loginPage.doLogin(username, password);
-			driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+			driver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
 			Assert.assertEquals(loginPage.dashboardMetricsTab.getText(), "Metrics");
 			// Make sure the view is present, if not present then add the view
 			
@@ -55,7 +55,9 @@ public class StormViewTests extends BaseTest{
 	@Test(priority=1)
 	public void navigateToStormView() {
 		try {
+			driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 			ambariDashboardPage.goToViewWithName(STORM_VIEW_NAME);
+			driver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
 			driver.switchTo().frame(driver.findElement(By.tagName("iframe")));
 			String actual=stormPage.topologyListingHeader.getText();
 			Assert.assertEquals(actual, "Topology Listing");
@@ -70,9 +72,9 @@ public class StormViewTests extends BaseTest{
 	public void openTopologyView()
 	{
 		try{
-			stormPage.firstTopologyLink.click();
 			driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-			Thread.sleep(3000);
+			stormPage.firstTopologyLink.click();
+			Thread.sleep(5000);
 			Assert.assertEquals(stormPage.topologySummaryHeader.getText(), "TOPOLOGY SUMMARY");
 		}catch(Exception e)
 		{
@@ -89,8 +91,14 @@ public class StormViewTests extends BaseTest{
 			if(stormPage.topologyDeactivateButton.isEnabled())
 			{
 			stormPage.topologyDeactivateButton.click();
-			stormPage.confirmationMessageYesButton.click();
 			driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+			WebElement deactivateModal = driver.findElement(By.cssSelector("div.modal-footer"));
+			driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+			Thread.sleep(2000);
+			deactivateModal.findElement(By.xpath("./button[2]")).click();
+//			stormPage.confirmationMessageYesButton.click();
+			driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+			Thread.sleep(2000);
 			boolean b = driver.getPageSource().contains("Topology deactivated successfully.");
 			Assert.assertTrue(b);
 			}else{
@@ -108,12 +116,18 @@ public class StormViewTests extends BaseTest{
 	{
 		try{
 			driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+			Thread.sleep(7000);
 			if(stormPage.topologyActivateButton.isEnabled())
 			{
-			stormPage.topologyDeactivateButton.click();
-			stormPage.confirmationMessageYesButton.click();
+			stormPage.topologyActivateButton.click();
 			driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-			boolean b = driver.getPageSource().contains("Topology deactivated successfully.");
+			WebElement deactivateModal = driver.findElement(By.cssSelector("div.modal-footer"));
+			driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+			Thread.sleep(2000);
+			deactivateModal.findElement(By.xpath("./button[2]")).click();
+			driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+			Thread.sleep(4000);
+			boolean b = driver.getPageSource().contains("Topology activated successfully.");
 			Assert.assertTrue(b);
 			}else{
 				System.out.println("Topology already Active");
@@ -125,7 +139,7 @@ public class StormViewTests extends BaseTest{
 		}
 	}
 	
-	@Test(priority=4)
+	@Test(priority=5)
 	public void activatingSystemSummary()
 	{
 		try{
@@ -146,7 +160,7 @@ public class StormViewTests extends BaseTest{
 		}
 	}
 	
-	@Test(priority=5)
+	@Test(priority=6)
 	public void activatingDebugMode()
 	{
 		try{
@@ -169,7 +183,7 @@ public class StormViewTests extends BaseTest{
 		}
 	}
 	
-	@Test(priority=6)
+	@Test(priority=7)
 	public void navigatetoTopologyListing()
 	{
 		try{
@@ -188,14 +202,14 @@ public class StormViewTests extends BaseTest{
 		}
 	}
 	
-	@Test(priority=7)
+	@Test(priority=8)
 	public void verifyStatusofTopology()
 	{
 		try{
 			String actualStatus=stormPage.getTopologyStatus("WordCount");
 			if(actualStatus.equals("ACTIVE"))
 			{
-				boolean bol=driver.findElement(By.xpath(".//*[@id='container']/div/div[1]/div/div/div/div[1]/div[4]/div/button[1]")).isSelected();
+				boolean bol=driver.findElement(By.xpath(".//*[@id='container']/div/div[1]/div/div/div/div[1]/div[4]/div/button[1]")).getCssValue("disabled").equals("");
 				Assert.assertTrue(bol);
 			}else{
 				boolean bol=driver.findElement(By.xpath(".//*[@id='container']/div/div[1]/div/div/div/div[1]/div[4]/div/button[2]")).isSelected();
@@ -208,11 +222,13 @@ public class StormViewTests extends BaseTest{
 		}
 	}
 	
-	@Test(priority=8)
+	@Test(priority=9)
 	public void navigateToStormViewHome()
 	{
 		try{
 			stormPage.breadcrumHomeIcon.click();
+//			driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+			Thread.sleep(4000);
 			boolean bol=driver.findElement(By.xpath(".//*[@id='container']/div[1]/div[1]/div[2]/div/div[1]/div/div/div[2]/div/table/tbody/tr[1]/td[1]")).getText().equals("No topology found !");
 			Assert.assertFalse(bol);
 			Assert.assertEquals(stormPage.topologyListingHeader.getText(), "Topology Listing");
@@ -222,66 +238,120 @@ public class StormViewTests extends BaseTest{
 		}
 	}
 	
-	@Test(priority=9)
+	@Test(priority=10)
 	public void openRebalanceTopologyWindow()
 	{
+		try{
+		stormPage.firstTopologyLink.click();
+		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 		stormPage.topologyRebalanceButton.click();
 		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		Thread.sleep(3000);
 //		Assert.assertTrue(driver.findElement(By.id("ex1")).isDisplayed());
 //		Assert.assertTrue(condition);
 		Assert.assertEquals(stormPage.rebalanceTopologyWindowHeader.getText(), "Rebalance Topology");
+		}catch(Exception e){
+			e.printStackTrace();
+			Assert.fail();
+		}
 	}
 	
-	@Test(priority=10)
+	@Test(priority=11)
 	public void allRebalancingFieldsDisplayed()
 	{
 		boolean bol=driver.findElement(By.xpath(".//*[@id='modal-rebalance']/div/div/div[2]/form/div/label")).isDisplayed();
 		Assert.assertTrue(bol);
 	}
 	
-	@Test(priority=11)
+	@Test(priority=12)
 	public void closingRebalanceTopologyWindow()
 	{
+		try{
 		driver.findElement(By.xpath(".//*[@id='modal-rebalance']/div/div/div[3]/button[1]")).click();
-		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+//		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		Thread.sleep(3000);
 		String actual=stormPage.breadCrumTopologyListingBtn.getText();
 		Assert.assertEquals(actual, "Topology Listing");
-	}
-	
-	@Test(priority=12)
-	public void displayChangeLogLevelList()
-	{
-		stormPage.changeLogLevelButton.click();
-		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-		Assert.assertTrue(driver.findElement(By.xpath(".//*[@id='slideContent']/div/div/table/tbody/tr/td[1]/a")).isDisplayed());
+		}catch(Exception e){
+			e.printStackTrace();
+			Assert.fail();
+		}
 	}
 	
 	@Test(priority=13)
-	public void minimisingContainers()
+	public void displayChangeLogLevelList()
 	{
-		stormPage.minimizeWordCount.click();
-		stormPage.minimizeSpouts.click();
-		stormPage.minimizeBolts.click();
+		try{
+		stormPage.changeLogLevelButton.click();
+//		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		Thread.sleep(4000);
+		Assert.assertTrue(driver.findElement(By.xpath(".//*[@id='slideContent']/div/div/table/tbody/tr/td[1]/a")).isDisplayed());
+		}catch(Exception e){
+			e.printStackTrace();
+			Assert.fail();
+		}
 	}
 	
 	@Test(priority=14)
-	public void openSpoutStats()
+	public void minimisingContainers()
 	{
+		try{
+		stormPage.minimizeWordCount.click();
+		Thread.sleep(2000);
 		stormPage.minimizeSpouts.click();
-		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-		stormPage.firstSpoutId.click();
-		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-		Assert.assertEquals(stormPage.spoutStatsHeader.getText(), "Spout Stats");
+		Thread.sleep(2000);
+		stormPage.minimizeBolts.click();
+		Thread.sleep(2000);
+		}catch(Exception e){
+			e.printStackTrace();
+			Assert.fail();
+		}
 	}
 	
 	@Test(priority=15)
+	public void openSpoutStats()
+	{
+		try{
+		stormPage.minimizeSpouts.click();
+//		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		Thread.sleep(3000);
+		stormPage.firstSpoutId.click();
+//		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		Thread.sleep(3000);
+		Assert.assertEquals(stormPage.spoutStatsHeader.getText(), "SPOUT STATS");
+		}catch(Exception e){
+			e.printStackTrace();
+			Assert.fail();
+		}
+	}
+	
+	@Test(priority=16)
 	public void openBoltStats()
 	{
+		try{
 		stormPage.breadcrumTopologyName.click();
-		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+//		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		Thread.sleep(3000);
 		stormPage.firstBoltId.click();
-		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-		Assert.assertEquals(stormPage.boltStatsHeader.getText(), "Bolt Stats");
+//		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		Thread.sleep(3000);
+		Assert.assertEquals(stormPage.boltStatsHeader.getText(), "BOLT STATS");
+		}catch(Exception e){
+			e.printStackTrace();
+			Assert.fail();
+		}
+	}
+	
+	@Test(priority=17)
+	public void verifyWindowDropDown()
+	{
+		List<WebElement> element=driver.findElements(By.xpath(".//*[@id='container']/div/div[2]/div[2]/div/div[2]/table/tbody/tr/td[1]"));
+		for (int i=1;i<=element.size();i++)
+		{
+			String displayedWindowName=driver.findElement(By.xpath(".//*[@id='container']/div/div[2]/div[2]/div/div[2]/table/tbody/tr["+i+"]/td[1]")).getText();
+			String dropdownWindowName=driver.findElement(By.xpath(".//*[@id='container']/div/div[1]/div/div/div/div[1]/div[1]/select/option["+i+"]")).getText();
+			Assert.assertEquals(displayedWindowName, dropdownWindowName);
+		}
 	}
 	
 //	@Test(priority=16)

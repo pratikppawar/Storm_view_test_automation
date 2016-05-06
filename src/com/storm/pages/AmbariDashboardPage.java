@@ -22,7 +22,7 @@ public class AmbariDashboardPage extends BasePage {
 		Actions action = new Actions(driver);
 		action.moveToElement(navBarViewMenu).perform();
 		Thread.sleep(6000);
-		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+//		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 		List<WebElement> elementList = driver.findElements(By.xpath("//div/div/div/ul/li[6]/ul/li"));
 		WebElement viewMenuElement = null;
 		for(WebElement e : elementList) {
