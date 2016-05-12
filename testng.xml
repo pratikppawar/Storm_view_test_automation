@@ -1,7 +1,22 @@
 <suite name="Storm Test Suite" preserve-order="true" >
-	<test name="Storm Dashboard Test">
+	<test name="Storm Dash-board Test">
     <classes>
-      <class name="com.storm.tests.StormViewTests"/>
+      <class name="com.storm.tests.DashboardTest"/>
+    </classes>
+  </test >
+  <test name="Storm SpoutPage Test">
+    <classes>
+      <class name="com.storm.tests.SpoutStatsTest"/>
+    </classes>
+  </test >
+  <test name="Storm BoltsPage Test">
+    <classes>
+      <class name="com.storm.tests.BoltStatsTest"/>
+    </classes>
+  </test >
+  <test name="Storm Storm Home Test">
+    <classes>
+      <class name="com.storm.tests.StormHomeTest"/>
     </classes>
   </test >
 </suite>

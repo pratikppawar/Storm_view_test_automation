@@ -15,6 +15,9 @@ public class AmbariDashboardPage extends BasePage {
 	@FindBy(xpath = "html/body/div[1]/div/div/div[1]/div/div/div/ul/li[6]/a/i")
 	protected WebElement navBarViewMenu;
 	
+	@FindBy(id="i18n-10")
+	public WebElement ambariLogo;
+	
 	@FindBy(xpath = "")
 	protected WebElement viewMenuItems;
 	
